@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-data*/
-dataset*/
+data/
+dataset-dbg/
 output*/
 # C extensions
 *.so
