@@ -5,6 +5,7 @@ __pycache__/
 data/
 dataset-dbg/
 output*/
+dataset-covid*/
 # C extensions
 *.so
 

@@ -11,7 +11,7 @@ class PlotDigraph:
         "Create an empty graph"
         self.digraph  = Digraph(comment='De Bruijn')
         self.nodes = set()
-        self.edges = list()
+        self.edges = set()
 
     def create_dot_graph(self, nodes, edges):
         "Create graph in 'dot' language to be plotted"

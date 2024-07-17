@@ -15,7 +15,7 @@ class DeBruijnGraph(PlotDigraph):
 
     def graph_from_sequence(self,):
         "Given a sequence, create the De Bruijn Graph"
-        print("From sequence")
+        # print("From sequence")
         for j,c in enumerate(self.sequence):
             if j+self.k < len(self.sequence):
                 # Nodes: each (k-1)-mer is a node
@@ -23,7 +23,7 @@ class DeBruijnGraph(PlotDigraph):
                 v = self.sequence[j+1:j+self.k+1]
                 
                 # Add Edge
-                self.edges.append((u,v))
+                self.edges.add((u,v))
                 
                 # Add Nodes
                 self.nodes.add(u)
@@ -31,12 +31,12 @@ class DeBruijnGraph(PlotDigraph):
 
     def graph_from_kmers(self,):
         "Given a list of kmers, create the De Bruijn Graph"
-        print("From k-mers")
+        # print("From k-mers")
         # Each k-mer is an edge
         for kmer in self.kmers: 
             u,v = kmer[:-1], kmer[1:]
             if len(u) == len(v) == self.k:
-                self.edges.append((u,v))
+                self.edges.add((u,v))
                 self.nodes.add(u)
                 self.nodes.add(v)
 
