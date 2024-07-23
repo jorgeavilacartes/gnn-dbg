@@ -24,8 +24,10 @@ class dBGDataset(Dataset):
                  transform=None, pre_transform=None, pre_filter=None):
         self.k = k
         self.files = [files] if isinstance(files,str) else files #"../data/ecolik12_ont_0001.fastq"
+        self.files.sort()
         self.format = format
         self.idx2metadata = self.get_idx2metadata()
+        self.filename2label = {Path(f).stem: num for num,f in enumerate(self.files)}
         super().__init__(root=root, transform=transform, pre_transform=pre_transform, pre_filter=pre_filter)
         
 
@@ -48,12 +50,17 @@ class dBGDataset(Dataset):
             records = SeqIO.parse(path_file, format=self.format)
             filename = Path(path_file).stem
             ommit_ids = self.ommit_seqids(path_file)
+            label = self.filename2label[filename]
 
             for r in tqdm(records, desc=f"{filename}"):
+
+                if r.id in ommit_ids:
+                    continue
+
                 # Read data from `raw_path`.
                 dbg = DeBruijnGraph(sequence=r.seq, k=self.k)
                 kmer_count = self.count_kmers(r.seq, self.k)
-                data = self.create_torch_graph(dbg.nodes, dbg.edges, kmer_count)
+                data = self.create_torch_graph(dbg.nodes, dbg.edges, kmer_count, label)
 
                 if self.pre_filter is not None and not self.pre_filter(data):
                     continue
@@ -73,19 +80,26 @@ class dBGDataset(Dataset):
         data = torch.load(Path(self.processed_dir).joinpath(f'{m.filename}/data_{m.idx}.pt'))
         return data
     
-    def create_torch_graph(self, nodes: set, edges: list, kmer_count: dict):
+    def create_torch_graph(self, nodes: set, edges: list, kmer_count: dict, label: int):
 
+        nodes = list(nodes)
+        nodes.sort()
         idx_nodes = {kmer: idx  for idx, kmer in  enumerate(nodes)}
         
         # nodes
-        feat_nodes = [ [kmer_count[kmer]] for kmer in nodes]
+        # tot_kmers = sum(kmer_count.values())
+        max_count = max(kmer_count.values())
+        feat_nodes = [ [kmer_count[kmer]/max_count] for kmer in nodes]
         x = torch.tensor(feat_nodes, dtype=torch.float)
 
         # edges    
         edges =  list(map( lambda x: (idx_nodes[x[0]],idx_nodes[x[1]]) , edges))
         edge_index = torch.tensor(edges, dtype=torch.long)    
 
-        return Data(x=x, edge_index=edge_index.t().contiguous())
+        # label 
+        y = torch.tensor([label], dtype=torch.long) 
+
+        return Data(x=x, edge_index=edge_index.t().contiguous(), y = y)
 
     def count_kmers(self, seq, k):
 
