@@ -6,6 +6,7 @@ data/
 dataset-dbg/
 output*/
 dataset-covid*/
+experiments/
 # C extensions
 *.so
 

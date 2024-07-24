@@ -49,13 +49,13 @@ class dBGDataset(Dataset):
         
             records = SeqIO.parse(path_file, format=self.format)
             filename = Path(path_file).stem
-            ommit_ids = self.ommit_seqids(path_file)
+            # ommit_ids = self.ommit_seqids(path_file)
             label = self.filename2label[filename]
 
             for r in tqdm(records, desc=f"{filename}"):
 
-                if r.id in ommit_ids:
-                    continue
+                # if r.id in ommit_ids:
+                #     continue
 
                 # Read data from `raw_path`.
                 dbg = DeBruijnGraph(sequence=r.seq, k=self.k)
@@ -116,22 +116,22 @@ class dBGDataset(Dataset):
         idx = 0
         for f in self.files:
             records = SeqIO.parse(f, format=self.format)
-            ommit_ids = self.ommit_seqids(f)
+            # ommit_ids = self.ommit_seqids(f)
             filename = Path(f).stem
             for r in records:
-                if r.id not in ommit_ids:
-                    idx2metadata.append(
-                        Seq(filename, r.id, idx)
-                    )
-                    idx += 1
+                # if r.id not in ommit_ids:
+                idx2metadata.append(
+                    Seq(filename, r.id, idx)
+                )
+                idx += 1
 
         return idx2metadata
     
-    def ommit_seqids(self,f):
-        records = SeqIO.parse(f, format=self.format)
-        l = []
-        for f in records:
-            l.append(f.id)
-        count = Counter(l)
+    # def ommit_seqids(self,f):
+    #     records = SeqIO.parse(f, format=self.format)
+    #     l = []
+    #     for f in records:
+    #         l.append(f.id)
+    #     count = Counter(l)
         
-        return list(dict(filter(lambda t: t[1]>1, count.items())).keys())
+    #     return list(dict(filter(lambda t: t[1]>1, count.items())).keys())

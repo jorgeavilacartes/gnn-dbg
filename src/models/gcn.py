@@ -22,7 +22,7 @@ class GCN(torch.nn.Module):
         self.conv2 = GCNConv(hidden_channels, hidden_channels)
         self.conv3 = GCNConv(hidden_channels, hidden_channels)
         self.lin = Linear(hidden_channels, num_classes)
-        self.softmax = torch.nn.Softmax(dim=-1)
+        # self.softmax = torch.nn.Softmax(dim=-1)
 
     def forward(self, x, edge_index, batch):
         # 1. Obtain node embeddings 
@@ -36,7 +36,7 @@ class GCN(torch.nn.Module):
         x = global_mean_pool(x, batch)  # [batch_size, hidden_channels]
 
         # 3. Apply a final classifier
-        x = F.dropout(x, p=0.1, training=self.training)
+        # x = F.dropout(x, p=0.1, training=self.training)
         x = self.lin(x)
-        x = self.softmax(x)
+        # x = self.softmax(x)
         return x
