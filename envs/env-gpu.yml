@@ -1,0 +1,27 @@
+name: pyg
+channels:
+  - conda-forge 
+  - pytorch
+  - nvidia
+  - pyg
+dependencies:
+  - python < 3.12
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cpuonly
+  - pytorch-cuda
+  - pyg
+  - pandas
+  - scikit-learn
+  - fastparquet
+  - ipykernel
+  - jupyterlab
+  - python-igraph
+  - networkx
+  - biopython
+  - seaborn
+  - matplotlib
+  - pip
+  - pip:
+    - graphviz

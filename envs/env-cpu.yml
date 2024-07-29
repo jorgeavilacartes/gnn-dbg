@@ -9,8 +9,7 @@ dependencies:
   - pytorch
   - torchvision
   - torchaudio
-  # - cpuonly
-  - pytorch-cuda
+  - cpuonly
   - pyg
   - pandas
   - scikit-learn
@@ -20,6 +19,8 @@ dependencies:
   - python-igraph
   - networkx
   - biopython
+  - seaborn
+  - matplotlib
   - pip
   - pip:
     - graphviz
